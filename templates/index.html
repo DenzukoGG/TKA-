@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Rekomendasi Mapel Pilihan TKA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <h1>🎯 Rekomendasi Mapel Pilihan TKA</h1>
+        <p>Isi data di bawah untuk mengetahui 3 mapel pilihan TKA terbaik untukmu.</p>
+    </header>
+
+    <main>
+
+        <!-- ======================================================
+             FORM INPUT
+             Form ini mengirim data ke route "/hasil" dengan method
+             POST. Semua perhitungan angka dilakukan di app.py,
+             JavaScript di sini HANYA untuk tampilan (show/hide).
+        ======================================================= -->
+        <form action="/hasil" method="POST" id="form-mapel">
+
+            <section class="card">
+                <h2>1. Pilih Paket Kelas</h2>
+                <select name="paket" id="pilih-paket" required>
+                    <option value="" disabled selected>-- Pilih Paket --</option>
+                    {% for kode, daftar_mapel in paket_kelas.items() %}
+                        <option value="{{ kode }}"
+                            {% if kode_paket_terpilih == kode %}selected{% endif %}>
+                            Paket {{ kode }} ({{ daftar_mapel|join(', ') }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </section>
+
+            <!-- ==================================================
+                 INPUT DINAMIS PER PAKET
+                 Setiap paket punya <div> tersendiri berisi 4 mapel.
+                 Secara default semua disembunyikan (lihat style.css
+                 class "hidden"), lalu JavaScript akan menampilkan
+                 salah satunya sesuai paket yang dipilih.
+            =================================================== -->
+            {% for kode, daftar_mapel in paket_kelas.items() %}
+            <section class="card grup-paket hidden" id="grup-paket-{{ kode }}">
+                <h2>2. Input Data — Paket {{ kode }}</h2>
+
+                {% for mapel in daftar_mapel %}
+                <div class="input-mapel">
+                    <h3>{{ mapel }}</h3>
+
+                    <label for="rapor_{{ mapel }}_{{ kode }}">
+                        Nilai Rapor (0 - 100)
+                    </label>
+                    <input
+                        type="number"
+                        id="rapor_{{ mapel }}_{{ kode }}"
+                        name="rapor_{{ mapel }}"
+                        min="0" max="100" step="1"
+                        placeholder="Contoh: 85">
+
+                    <label for="minat_{{ mapel }}_{{ kode }}">
+                        Tingkat Minat: <span class="nilai-slider" id="label-minat_{{ mapel }}_{{ kode }}">3</span> / 5
+                    </label>
+                    <input
+                        type="range"
+                        id="minat_{{ mapel }}_{{ kode }}"
+                        name="minat_{{ mapel }}"
+                        min="1" max="5" step="1" value="3"
+                        oninput="tampilkanNilaiSlider(this)">
+
+                    <label for="bakat_{{ mapel }}_{{ kode }}">
+                        Tingkat Bakat: <span class="nilai-slider" id="label-bakat_{{ mapel }}_{{ kode }}">3</span> / 5
+                    </label>
+                    <input
+                        type="range"
+                        id="bakat_{{ mapel }}_{{ kode }}"
+                        name="bakat_{{ mapel }}"
+                        min="1" max="5" step="1" value="3"
+                        oninput="tampilkanNilaiSlider(this)">
+                </div>
+                {% endfor %}
+            </section>
+            {% endfor %}
+
+            <button type="submit" class="tombol-utama">Lihat Rekomendasi TKA →</button>
+        </form>
+
+        <!-- ======================================================
+             HASIL REKOMENDASI
+             Bagian ini hanya muncul jika app.py mengirim data
+             rekomendasi_tka (artinya form sudah pernah disubmit).
+        ======================================================= -->
+        {% if rekomendasi_tka %}
+        <section class="card hasil">
+            <h2>🏆 Hasil Rekomendasi — Paket {{ kode_paket_terpilih }}</h2>
+            <p>Berikut 3 mapel pilihan TKA terbaik berdasarkan perhitungan Nilai Rapor, Minat, dan Bakatmu.</p>
+
+            {% for data in rekomendasi_tka %}
+            <div class="kartu-rekomendasi peringkat-{{ loop.index }}">
+                <div class="peringkat">#{{ loop.index }}</div>
+                <div class="detail-rekomendasi">
+                    <h3>{{ data.nama_mapel }}</h3>
+                    <p class="skor-akhir">Skor Akhir: <strong>{{ data.skor_akhir }}</strong></p>
+
+                    <table class="tabel-breakdown">
+                        <thead>
+                            <tr>
+                                <th>Komponen</th>
+                                <th>Nilai Asli</th>
+                                <th>Bobot</th>
+                                <th>Poin Kontribusi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Nilai Rapor</td>
+                                <td>{{ data.nilai_rapor }}</td>
+                                <td>50%</td>
+                                <td>{{ data.poin_rapor }}</td>
+                            </tr>
+                            <tr>
+                                <td>Minat</td>
+                                <td>{{ data.minat_slider }}/5 → {{ data.minat_konversi }}</td>
+                                <td>25%</td>
+                                <td>{{ data.poin_minat }}</td>
+                            </tr>
+                            <tr>
+                                <td>Bakat</td>
+                                <td>{{ data.bakat_slider }}/5 → {{ data.bakat_konversi }}</td>
+                                <td>25%</td>
+                                <td>{{ data.poin_bakat }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if mapel_tidak_terpilih %}
+            <div class="tidak-terpilih">
+                <h3>Mapel yang tidak masuk 3 besar:</h3>
+                <ul>
+                    {% for data in mapel_tidak_terpilih %}
+                    <li>{{ data.nama_mapel }} — Skor Akhir: {{ data.skor_akhir }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </section>
+        {% endif %}
+
+    </main>
+
+    <footer>
+        <p>Proyek Informatika SMA — Aplikasi Rekomendasi Mapel Pilihan TKA</p>
+    </footer>
+
+    <script>
+        // ==================================================================
+        // CATATAN: JavaScript di sini TIDAK melakukan perhitungan apa pun.
+        // Tugasnya hanya 2:
+        //   1. Menampilkan grup input mapel sesuai paket yang dipilih
+        //   2. Menampilkan angka slider (Minat/Bakat) secara live di layar
+        // Semua rumus dan perhitungan skor tetap dikerjakan Python (app.py)
+        // ==================================================================
+
+        const dropdownPaket = document.getElementById("pilih-paket");
+        const semuaGrupPaket = document.querySelectorAll(".grup-paket");
+
+        function tampilkanGrupPaket(kodeTerpilih) {
+            // Sembunyikan dulu semua grup input mapel
+            semuaGrupPaket.forEach(function (grup) {
+                grup.classList.add("hidden");
+
+                // Nonaktifkan "required" pada input yang sedang disembunyikan
+                // supaya form tidak error saat submit hanya karena input
+                // mapel paket lain kosong.
+                grup.querySelectorAll("input[type='number']").forEach(function (input) {
+                    input.required = false;
+                });
+            });
+
+            // Tampilkan hanya grup mapel milik paket yang dipilih
+            const grupAktif = document.getElementById("grup-paket-" + kodeTerpilih);
+            if (grupAktif) {
+                grupAktif.classList.remove("hidden");
+                grupAktif.querySelectorAll("input[type='number']").forEach(function (input) {
+                    input.required = true;
+                });
+            }
+        }
+
+        dropdownPaket.addEventListener("change", function () {
+            tampilkanGrupPaket(this.value);
+        });
+
+        // Fungsi untuk menampilkan angka slider secara real-time
+        // (misal saat digeser ke angka 4, label otomatis berubah jadi "4")
+        function tampilkanNilaiSlider(elemenSlider) {
+            const idLabel = "label-" + elemenSlider.id;
+            document.getElementById(idLabel).textContent = elemenSlider.value;
+        }
+
+        // Jika halaman ini adalah halaman hasil (setelah submit) dan
+        // Flask sudah mengisi ulang paket yang tadi dipilih, langsung
+        // tampilkan grup mapelnya juga.
+        {% if kode_paket_terpilih %}
+        tampilkanGrupPaket("{{ kode_paket_terpilih }}");
+        {% endif %}
+    </script>
+
+</body>
+</html>
