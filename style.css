@@ -1,0 +1,265 @@
+/* =========================================================
+   RESET DASAR
+   ========================================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+    line-height: 1.6;
+    padding-bottom: 40px;
+}
+
+/* =========================================================
+   HEADER & FOOTER
+   ========================================================= */
+header {
+    background-color: #2b5876;
+    background-image: linear-gradient(160deg, #2b5876, #4e4376);
+    color: #fff;
+    padding: 32px 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+}
+
+header p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+footer {
+    text-align: center;
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: 40px;
+}
+
+/* =========================================================
+   LAYOUT UTAMA
+   ========================================================= */
+main {
+    max-width: 720px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+    font-size: 1.15rem;
+    color: #2b5876;
+    margin-bottom: 14px;
+    border-bottom: 2px solid #e6ecf1;
+    padding-bottom: 8px;
+}
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+select,
+input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cfd8df;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+select:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-color: #4e4376;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    color: #444;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #4e4376;
+    cursor: pointer;
+}
+
+.nilai-slider {
+    display: inline-block;
+    min-width: 18px;
+    text-align: center;
+    font-weight: 700;
+    color: #4e4376;
+}
+
+.input-mapel {
+    background-color: #fbfcfd;
+    border: 1px solid #e6ecf1;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+}
+
+.input-mapel h3 {
+    color: #2b5876;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+/* Grup paket yang disembunyikan */
+.hidden {
+    display: none;
+}
+
+/* =========================================================
+   TOMBOL
+   ========================================================= */
+.tombol-utama {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #2b5876;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.tombol-utama:hover {
+    background-color: #4e4376;
+}
+
+.tombol-utama:active {
+    transform: scale(0.98);
+}
+
+/* =========================================================
+   HASIL REKOMENDASI
+   ========================================================= */
+.hasil h2 {
+    color: #2b5876;
+}
+
+.kartu-rekomendasi {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background-color: #f8faf9;
+    border: 1px solid #e6ecf1;
+    border-left: 6px solid #4e4376;
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.kartu-rekomendasi.peringkat-1 {
+    border-left-color: #d4a017;
+    background-color: #fffdf5;
+}
+
+.peringkat {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #4e4376;
+    min-width: 44px;
+}
+
+.peringkat-1 .peringkat {
+    color: #d4a017;
+}
+
+.detail-rekomendasi {
+    flex: 1;
+}
+
+.detail-rekomendasi h3 {
+    font-size: 1.1rem;
+    color: #222;
+    margin-bottom: 4px;
+}
+
+.skor-akhir {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.skor-akhir strong {
+    color: #2b5876;
+    font-size: 1.1rem;
+}
+
+/* Tabel breakdown skor */
+.tabel-breakdown {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.tabel-breakdown th,
+.tabel-breakdown td {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid #e6ecf1;
+}
+
+.tabel-breakdown th {
+    background-color: #eef2f5;
+    color: #444;
+    font-weight: 600;
+}
+
+.tidak-terpilih {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 2px dashed #e6ecf1;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.tidak-terpilih ul {
+    list-style: none;
+    margin-top: 8px;
+}
+
+.tidak-terpilih li {
+    padding: 4px 0;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .kartu-rekomendasi {
+        flex-direction: column;
+    }
+
+    .peringkat {
+        font-size: 1.1rem;
+    }
+}
